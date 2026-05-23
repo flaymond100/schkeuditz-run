@@ -77,9 +77,15 @@ export function HomePage() {
               </p>
             )}
             <div className="flex flex-wrap gap-3 pt-2">
-              <Link className="btn-primary" to={registerPath}>
-                Jetzt anmelden
-              </Link>
+              {upcomingRace ? (
+                <Link className="btn-primary" to={registerPath}>
+                  Jetzt anmelden
+                </Link>
+              ) : (
+                <span className="btn-primary cursor-not-allowed opacity-50">
+                  Anmeldung demnächst
+                </span>
+              )}
               <Link
                 className="btn-outline"
                 style={{ color: '#fff', borderColor: 'rgba(255,255,255,0.6)', backgroundColor: 'rgba(255,255,255,0.1)' }}
@@ -162,13 +168,22 @@ export function HomePage() {
         <p className="mx-auto mt-3 max-w-xl text-green-100">
           Sichere deinen Startplatz — die Plätze sind begrenzt.
         </p>
-        <Link
-          className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-8 py-3 font-bold transition hover:bg-green-50"
-          style={{ color: 'var(--primary-dark)' }}
-          to={registerPath}
-        >
-          Anmelden →
-        </Link>
+        {upcomingRace ? (
+          <Link
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-8 py-3 font-bold transition hover:bg-green-50"
+            style={{ color: 'var(--primary-dark)' }}
+            to={registerPath}
+          >
+            Anmelden →
+          </Link>
+        ) : (
+          <span
+            className="mt-6 inline-flex cursor-not-allowed items-center gap-2 rounded-full bg-white/60 px-8 py-3 font-bold opacity-60"
+            style={{ color: 'var(--primary-dark)' }}
+          >
+            Anmeldung demnächst
+          </span>
+        )}
       </section>
     </>
   );

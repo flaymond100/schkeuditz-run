@@ -6,7 +6,6 @@ export type RegistrationFormState = {
   clubTeam: string;
   nation: string;
   startingClass: string;
-  uciLicenseNumber: string;
   email: string;
   privacyAccepted: boolean;
 };
@@ -23,15 +22,14 @@ export const initialFormState: RegistrationFormState = {
   clubTeam: '',
   nation: 'GER',
   startingClass: '',
-  uciLicenseNumber: '',
   email: '',
   privacyAccepted: false,
 };
 
 export const genderOptions = [
-  { value: 'male', label: 'Male' },
-  { value: 'female', label: 'Female' },
-  { value: 'other', label: 'Other' },
+  { value: 'male', label: 'Männlich' },
+  { value: 'female', label: 'Weiblich' },
+  { value: 'other', label: 'Divers' },
 ];
 
 export function validateForm(
@@ -40,37 +38,37 @@ export function validateForm(
   const errors: RegistrationFormErrors = {};
 
   if (!state.firstName.trim()) {
-    errors.firstName = 'First name is required.';
+    errors.firstName = 'Vorname ist erforderlich.';
   }
 
   if (!state.lastName.trim()) {
-    errors.lastName = 'Last name is required.';
+    errors.lastName = 'Nachname ist erforderlich.';
   }
 
   if (!state.birthDate) {
-    errors.birthDate = 'Birth date is required.';
+    errors.birthDate = 'Geburtsdatum ist erforderlich.';
   }
 
   if (!state.gender) {
-    errors.gender = 'Gender is required.';
+    errors.gender = 'Geschlecht ist erforderlich.';
   }
 
   if (!state.nation.trim()) {
-    errors.nation = 'Nation is required.';
+    errors.nation = 'Nationalität ist erforderlich.';
   }
 
   if (!state.startingClass) {
-    errors.startingClass = 'Starting class is required.';
+    errors.startingClass = 'Wertungsklasse ist erforderlich.';
   }
 
   if (!state.email.trim()) {
-    errors.email = 'Email is required.';
+    errors.email = 'E-Mail ist erforderlich.';
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email)) {
-    errors.email = 'Enter a valid email address.';
+    errors.email = 'Bitte gib eine gültige E-Mail-Adresse ein.';
   }
 
   if (!state.privacyAccepted) {
-    errors.privacyAccepted = 'You must accept the privacy policy.';
+    errors.privacyAccepted = 'Du musst der Datenschutzerklärung zustimmen.';
   }
 
   return errors;
