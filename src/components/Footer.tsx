@@ -38,10 +38,17 @@ export function Footer() {
         </div>
 
         <div
-          className="border-t pt-6 text-xs"
+          className="border-t pt-6 flex items-center justify-between text-xs"
           style={{ borderColor: 'rgba(134,239,172,0.2)', color: '#4ade80' }}
         >
-          Schkeuditz Run &copy; {new Date().getFullYear()}
+          <span>Schkeuditz Run &copy; {new Date().getFullYear()}</span>
+          <Link
+            className="transition hover:text-white"
+            style={{ color: '#4ade80' }}
+            to="/login"
+          >
+            Admin
+          </Link>
         </div>
       </div>
     </footer>

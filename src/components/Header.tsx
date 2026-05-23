@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../lib/supabase';
+import { fetchRaceCalendars } from '../lib/raceCalendar';
 
-const navLinks = [
+const staticNavLinks = [
   { label: 'Start', to: '/' },
-  { label: 'Anmelden', to: '/register' },
   { label: 'Ergebnisse', to: '/results' },
 ];
 
@@ -24,6 +25,17 @@ export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
   const [isSigningOut, setIsSigningOut] = useState(false);
+
+  const { data: races = [] } = useQuery({
+    queryKey: ['raceCalendars'],
+    queryFn: fetchRaceCalendars,
+  });
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const upcomingRace = races.find(r => new Date(r.raceDate) >= today) ?? races[0];
+  const registerPath = upcomingRace ? `/calendar/${upcomingRace.id}/register` : null;
+  const editPath = upcomingRace ? `/races/${upcomingRace.id}/edit` : null;
 
   useEffect(() => {
     setIsMenuOpen(false);
@@ -73,7 +85,7 @@ export function Header() {
         </Link>
 
         <nav aria-label="Primary" className="hidden items-center gap-1 lg:flex">
-          {navLinks.map(link => (
+          {staticNavLinks.map(link => (
             <NavLink
               key={link.to}
               end={link.to === '/'}
@@ -83,18 +95,28 @@ export function Header() {
               {link.label}
             </NavLink>
           ))}
+          {registerPath && (
+            <NavLink
+              className={({ isActive }) => navLinkClass(isActive)}
+              to={registerPath}
+            >
+              Anmelden
+            </NavLink>
+          )}
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
           {session ? (
             <>
-              <Link
-                className="rounded-full border-2 px-3 py-1.5 text-xs font-bold uppercase tracking-wide transition hover:opacity-90"
-                style={{ borderColor: 'var(--primary)', color: 'var(--primary)' }}
-                to="/races/new"
-              >
-                New Race
-              </Link>
+              {editPath && (
+                <Link
+                  className="rounded-full border-2 px-3 py-1.5 text-xs font-bold uppercase tracking-wide transition hover:opacity-90"
+                  style={{ borderColor: 'var(--primary)', color: 'var(--primary)' }}
+                  to={editPath}
+                >
+                  Rennen bearbeiten
+                </Link>
+              )}
               <button
                 className="rounded-full border-2 px-3 py-1.5 text-xs font-bold uppercase tracking-wide transition hover:opacity-70"
                 style={{ borderColor: 'var(--border-strong)', color: 'var(--text-secondary)' }}
@@ -102,13 +124,15 @@ export function Header() {
                 onClick={handleSignOut}
                 type="button"
               >
-                {isSigningOut ? 'Signing out…' : 'Logout'}
+                {isSigningOut ? '…' : 'Logout'}
               </button>
             </>
           ) : (
-            <Link className="btn-primary text-sm" to="/register">
-              Jetzt anmelden
-            </Link>
+            registerPath && (
+              <Link className="btn-primary text-sm" to={registerPath}>
+                Jetzt anmelden
+              </Link>
+            )
           )}
         </div>
 
@@ -141,7 +165,7 @@ export function Header() {
         >
           <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-5 sm:px-6">
             <nav aria-label="Mobile primary" className="grid gap-1">
-              {navLinks.map(link => (
+              {staticNavLinks.map(link => (
                 <NavLink
                   key={link.to}
                   end={link.to === '/'}
@@ -151,11 +175,23 @@ export function Header() {
                   {link.label}
                 </NavLink>
               ))}
+              {registerPath && (
+                <NavLink
+                  className={({ isActive }) => navLinkClass(isActive)}
+                  to={registerPath}
+                >
+                  Anmelden
+                </NavLink>
+              )}
             </nav>
             <div className="border-t-2 pt-4" style={{ borderColor: 'var(--border)' }}>
               {session ? (
                 <div className="flex flex-col gap-2">
-                  <Link className="btn-outline text-sm justify-center" to="/races/new">New Race</Link>
+                  {editPath && (
+                    <Link className="btn-outline text-sm justify-center" to={editPath}>
+                      Rennen bearbeiten
+                    </Link>
+                  )}
                   <button
                     className="btn-outline text-sm justify-center"
                     disabled={isSigningOut}
@@ -166,9 +202,11 @@ export function Header() {
                   </button>
                 </div>
               ) : (
-                <Link className="btn-primary w-full justify-center" to="/register">
-                  Jetzt anmelden
-                </Link>
+                registerPath && (
+                  <Link className="btn-primary w-full justify-center" to={registerPath}>
+                    Jetzt anmelden
+                  </Link>
+                )
               )}
             </div>
           </div>

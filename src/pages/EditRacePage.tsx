@@ -341,7 +341,7 @@ export function EditRacePage() {
       await queryClient.invalidateQueries({ queryKey: ['race-calendar'] });
       await queryClient.invalidateQueries({ queryKey: ['race-registration'] });
       toast.success('Race updated');
-      navigate(`/calendar/${raceId}`);
+      navigate('/');
     },
   });
 
