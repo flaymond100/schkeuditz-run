@@ -11,10 +11,8 @@ export function AppLayout() {
   }, [pathname]);
 
   return (
-    <div className="min-h-screen bg-[color:var(--bg-primary)] text-[color:var(--text-primary-dark)]">
-      <a className="skip-link" href="#main-content">
-        Skip to content
-      </a>
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
+      <a className="skip-link" href="#main-content">Zum Inhalt springen</a>
       <Header />
       <main id="main-content" className="relative flex-1">
         <Outlet />

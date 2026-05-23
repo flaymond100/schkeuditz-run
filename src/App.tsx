@@ -29,7 +29,7 @@ function App() {
       <Routes>
         <Route element={<AppLayout />}>
           <Route element={<HomePage />} path="/" />
-          <Route element={<RaceRegistrationPage />} path="/register" />
+          <Route element={<RaceRegistrationPage />} path="/calendar/:slug/register" />
           <Route element={<RegistrationSuccessPage />} path="/registration-success" />
           <Route element={<ResultsPage />} path="/results" />
           <Route
