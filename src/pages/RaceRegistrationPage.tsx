@@ -8,6 +8,7 @@ import {
 } from '../lib/raceCategories';
 import { fetchRaceCalendarById } from '../lib/raceCalendar';
 import { NATIONS } from '../lib/nations';
+import { SCHKEUDITZ_CATEGORIES } from '../lib/schkeuditzCategories';
 import { createPaymentCheckout } from '../lib/paymentApi';
 import {
   genderOptions,
@@ -87,6 +88,17 @@ export function RaceRegistrationPage() {
     () => sortedSubRaces.find(s => s.id === formState.startingClass) ?? null,
     [sortedSubRaces, formState.startingClass]
   );
+
+  const impliedGender = useMemo(
+    () => SCHKEUDITZ_CATEGORIES.find(c => c.id === selectedSubRace?.name)?.impliedGender ?? null,
+    [selectedSubRace]
+  );
+
+  useEffect(() => {
+    if (impliedGender) {
+      setFormState(current => ({ ...current, gender: impliedGender }));
+    }
+  }, [impliedGender]);
 
   const activePriceCents = selectedSubRace?.activePriceCents ?? null;
 
@@ -265,29 +277,31 @@ export function RaceRegistrationPage() {
               ) : null}
             </label>
 
-            <label className="grid gap-2 text-sm text-(--text-secondary-dark)">
-              <span>Gender *</span>
-              <select
-                className="rounded-2xl border border-(--border-dark) bg-(--surface-soft) px-4 py-3 text-(--text-primary-dark) outline-none transition focus:border-(--accent-secondary)"
-                name="gender"
-                onChange={event =>
-                  handleFieldChange('gender', event.target.value)
-                }
-                value={formState.gender}
-              >
-                <option value="">Please select...</option>
-                {genderOptions.map(option => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-              {errors.gender ? (
-                <span className="text-sm text-(--accent-cta)">
-                  {errors.gender}
-                </span>
-              ) : null}
-            </label>
+            {!impliedGender && (
+              <label className="grid gap-2 text-sm text-(--text-secondary-dark)">
+                <span>Gender *</span>
+                <select
+                  className="rounded-2xl border border-(--border-dark) bg-(--surface-soft) px-4 py-3 text-(--text-primary-dark) outline-none transition focus:border-(--accent-secondary)"
+                  name="gender"
+                  onChange={event =>
+                    handleFieldChange('gender', event.target.value)
+                  }
+                  value={formState.gender}
+                >
+                  <option value="">Please select...</option>
+                  {genderOptions.map(option => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+                {errors.gender ? (
+                  <span className="text-sm text-(--accent-cta)">
+                    {errors.gender}
+                  </span>
+                ) : null}
+              </label>
+            )}
 
             <label className="grid gap-2 text-sm text-(--text-secondary-dark) md:col-span-2">
               <span>Club / Team</span>
