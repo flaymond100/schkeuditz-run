@@ -7,9 +7,9 @@ export type RaceCategory = {
 
 export async function fetchRaceCategories(): Promise<RaceCategory[]> {
   const { data, error } = await supabase
-    .from('race_categories')
+    .from('schkeuditz_categories')
     .select('id, label')
-    .order('label', { ascending: true });
+    .order('sort_order', { ascending: true });
 
   if (error) {
     throw error;
